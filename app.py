@@ -127,10 +127,10 @@ Useful expressions selection rules:
 - Idioms, Fixed constructions (verb + noun combinations, adjective + noun combination, prepositional phrases, common phrasal verbs)
 - Only select phrases with special meaning, not simple word listings 
 
-JSON 구조:
-- summary: {{"nl": "Dutch summary", "kr": "English translation"}}
-- expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "kr": "English explanation"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (3 items)
-- keywords: [{{"keyword": {{"nl": "Dutch keyword", "kr": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (5 items)"""
+JSON structure:
+- summary: {{"nl": "Dutch summary", "en": "English translation"}}
+- expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "en": "English explanation"}}, "examples": [{{"nl": "Dutch example", "en": "English example"}}] (3 items) }}] (3 items)
+- keywords: [{{"keyword": {{"nl": "Dutch keyword", "en": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (5 items)"""
                 
                 # API 호출
                 response = model.generate_content(prompt)

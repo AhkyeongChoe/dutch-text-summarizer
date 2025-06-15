@@ -107,8 +107,8 @@ if st.button("🚀 Tekst Samenvatten", type="primary", disabled=not (api_key and
 
 JSON 구조:
 - summary: {{"nl": "네덜란드어 요약", "kr": "한국어 번역"}}
-- Verbinding: [{{"expression": "유용한 표현", "explanation-nl": "네덜란드어 설명", "explanation-kr": "한국어 설명", "example-nl": "네덜란드어 예문", "example-kr": "한국어 예문"}}] (3개)
-- keyword: [{{"nl": "네덜란드어 키워드", "kr": "한국어 의미", "example-nl": "네덜란드어 예문", "example-kr": "한국어 예문"}}] (5개)"""
+- expressions: [{{"expression": "유용한 표현", "explanation": {{"nl": "네덜란드어 설명", "kr": "한국어 설명"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (3개)
+- keywords: [{{"keyword": {{"nl": "네덜란드어 키워드", "kr": "한국어 키워드"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (5개)"""
                 
                 else:  # English
                     prompt = f"""Summarize and analyze the following Dutch text for English speakers: "{keyword}"
@@ -129,8 +129,8 @@ Useful expressions selection rules:
 
 JSON structure:
 - summary: {{"nl": "Dutch summary", "en": "English translation"}}
-- Verbinding: [{{"expression": "useful expression", "explanation-nl": "Dutch explanation", "explanation-en": "English explanation", "example-nl": "Dutch example", "example-en": "English example"}}] (3 items)
-- keyword: [{{"nl": "Dutch keyword", "en": "English meaning", "example-nl": "Dutch example", "example-en": "English example"}}] (5 items)"""
+- expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "en": "English explanation"}}, "examples": [{{"nl": "Dutch example", "en": "English example"}}] (3 items) }}] (3 items)
+- keywords: [{{"keyword": {{"nl": "Dutch keyword", "en": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (5 items)"""
                 
                 # API 호출
                 response = model.generate_content(prompt)
@@ -170,29 +170,37 @@ JSON structure:
                     
                     # 유용한 표현 섹션
                     st.header("💬 Nuttige Uitdrukkingen")
-                    verbinding = result_json.get("Verbinding", [])
+                    expressions = result_json.get("expressions", [])
                     
-                    if verbinding:
-                        explanation_key = f"explanation-{lang_code}"
-                        example_key = f"example-{lang_code}"
-
-                        for i, item in enumerate(verbinding, 1):
+                    if expressions:
+                        for i, item in enumerate(expressions, 1):
                             with st.expander(f"**{item.get('expression', 'N/A')}**"):
-                                st.write(f"- {item.get('explanation-nl', 'N/A')} ({item.get(explanation_key, 'N/A')})")
-                                st.write(f"voorbeeld:")
-                                st.write(f"- {item.get('example-nl', 'N/A')} ({item.get(example_key, 'N/A')})")
+                                explanation_nl = item.get('explanation', {}).get('nl', 'N/A')
+                                explanation_target = item.get('explanation', {}).get(lang_code, 'N/A')
+                                st.write(f"{explanation_nl} ({explanation_target})")
+                                st.write(f"**voorbeeld:**")
+
+                                examples = item.get('examples', [])
+                                for idx, example in enumerate(examples, 1):
+                                    example_nl = example.get('nl', 'N/A')
+                                    example_target = example.get(lang_code, 'N/A')
+                                    st.write(f"- {example_nl} ({example_target})")
                     
                     # 키워드 섹션
                     st.header("🏷️ Belangrijke Woorden")
-                    keywords = result_json.get("keyword", [])
+                    keywords = result_json.get("keywords", [])
                     
                     if keywords:
-                        example_key = f"example-{lang_code}"
-
                         for i, item in enumerate(keywords, 1):
-                            with st.expander(f"**{item.get('nl', 'N/A')}**"):
-                                st.write(f"{item.get(lang_code, 'N/A')}")
-                                st.write(f"{item.get('example-nl', 'N/A')} ({item.get(example_key, 'N/A')})")
+                            with st.expander(f"**{item.get('keyword', {}).get('nl', 'N/A')}**"):
+                                item.get('keyword', {}).get('nl', 'N/A')
+                                st.write(f"{item.get('keyword', {}).get(lang_code, 'N/A')}")
+                                st.write(f"**voorbeeld:**")
+                                examples = item.get('examples', [])
+                                for idx, example in enumerate(examples, 1):
+                                    example_nl = example.get('nl', 'N/A')
+                                    example_target = example.get(lang_code, 'N/A')
+                                    st.write(f"- {example_nl} ({example_target})")
                     
                     # 원본 JSON 표시
                     # with st.expander("🔧 Originele JSON Data for developer"):
@@ -204,8 +212,6 @@ JSON structure:
                     
             except Exception as e:
                 st.error(f"❌ Er is een fout opgetreden: {str(e)}")
-
-
 
 # 푸터
 st.markdown("---")
