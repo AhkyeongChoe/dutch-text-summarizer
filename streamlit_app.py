@@ -92,7 +92,7 @@ if st.button("🚀 Tekst Samenvatten", type="primary", disabled=not (api_key and
                     prompt = f"""다음 조건에 맞춰 네덜란드어 텍스트를 요약하고 분석하시오: "{keyword}"
 
 조건:
-- {analysis_level.split()[0]} 수준 학습자를 위한 쉬운 네덜란드어 요약 (최대 4문장)
+- {analysis_level.split()[0]} 수준 학습자를 위한 쉬운 네덜란드어 요약 (최대 10문장)
 - 한국어 사용자를 위한 상세한 설명
 - JSON 형태로 결과 제공
 
@@ -114,7 +114,7 @@ JSON 구조:
                     prompt = f"""Summarize and analyze the following Dutch text for English speakers: "{keyword}"
 
 Requirements:
-- Easy Dutch summary for {analysis_level.split()[0]} level learners (max 4 sentences)
+- Easy Dutch summary for {analysis_level.split()[0]} level learners (max 10 sentences)
 - Detailed explanations for English speakers
 - Provide result in JSON format
 
