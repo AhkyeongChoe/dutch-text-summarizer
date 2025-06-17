@@ -107,8 +107,8 @@ if st.button("🚀 Tekst Samenvatten", type="primary", disabled=not (api_key and
 
 JSON 구조:
 - summary: {{"nl": "네덜란드어 요약", "kr": "한국어 번역"}}
-- expressions: [{{"expression": "유용한 표현", "explanation": {{"nl": "네덜란드어 설명", "kr": "한국어 설명"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (3개)
-- keywords: [{{"keyword": {{"nl": "네덜란드어 키워드", "kr": "한국어 키워드"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (5개)"""
+- expressions: [{{"expression": "유용한 표현", "explanation": {{"nl": "네덜란드어 설명", "kr": "한국어 설명"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (5개 이상)
+- keywords: [{{"keyword": {{"nl": "네덜란드어 키워드", "kr": "한국어 키워드"}}, "examples": [{{"nl": "네덜란드어 예문", "kr": "한국어 예문"}}] (3개) }}] (10개 이상)"""
                 
                 else:  # English
                     prompt = f"""Summarize and analyze the following Dutch text for English speakers: "{keyword}"
@@ -129,8 +129,8 @@ Useful expressions selection rules:
 
 JSON structure:
 - summary: {{"nl": "Dutch summary", "en": "English translation"}}
-- expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "en": "English explanation"}}, "examples": [{{"nl": "Dutch example", "en": "English example"}}] (3 items) }}] (3 items)
-- keywords: [{{"keyword": {{"nl": "Dutch keyword", "en": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (5 items)"""
+- expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "en": "English explanation"}}, "examples": [{{"nl": "Dutch example", "en": "English example"}}] (3 items) }}] (more than 5 items)
+- keywords: [{{"keyword": {{"nl": "Dutch keyword", "en": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (more than 10 items)"""
                 
                 # API 호출
                 response = model.generate_content(prompt)
