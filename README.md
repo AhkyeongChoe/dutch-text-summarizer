@@ -2,6 +2,7 @@
 Summarizer for Korean Speakers Learning Dutch
 https://nederlandse-tekst-samenvatting.streamlit.app
 
+더치 학습자를 위한 택스트 요약기 입니다.
 
  ### Hoe te gebruiken:
  1. **API Sleutel**: Voer je Google Gemini API sleutel in de zijbalk in
