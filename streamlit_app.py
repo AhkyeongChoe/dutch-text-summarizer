@@ -4,10 +4,10 @@ import json
 import os
 from dotenv import load_dotenv
 
-# 환경변수 로드
+# Load environment variables
 load_dotenv()
 
-# 페이지 설정
+# Page configuration
 st.set_page_config(
     page_title="Nederlandse Tekst Samenvatting", 
     page_icon="", 
@@ -17,11 +17,11 @@ st.set_page_config(
 st.title("Nederlandse Tekst Samenvatting")
 st.write("Gemini AI gebruiken om Nederlandse teksten samen te vatten voor taalstudenten!")
 
-# 사이드바 설정
+# Sidebar configuration
 st.sidebar.header("🔧 Instellingen")
 
 
-# API 키 설정
+# API key configuration
 # api_key = os.getenv("GEMINI_API_KEY")
 api_key = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY"))
 
@@ -43,7 +43,7 @@ else:
         except Exception as e:
             st.sidebar.error(f"❌ API sleutel fout: {str(e)}")
 
-# 텍스트 입력 영역
+# Text input area
 st.header("📝 Nederlandse Tekst Invoeren")
 keyword = st.text_area(
     "Plak hier je Nederlandse tekst:",
@@ -51,14 +51,14 @@ keyword = st.text_area(
     placeholder="Voer hier de Nederlandse tekst in die je wilt samenvatten..."
 )
 
-# 언어 선택
+# Language selection
 target_language = st.selectbox(
     "Welke taal spreek je?",
     options=["Korean (한국어)", "English"],
     help="Kies je moedertaal voor uitleg en vertalingen"
 )
 
-# 언어 코드 설정
+# Language code configuration
 language_mapping = {
     "Korean (한국어)": {"code": "kr", "name": "한국어", "full": "Korean"},
     "English": {"code": "en", "name": "English", "full": "English"},
@@ -69,7 +69,7 @@ lang_code = lang_info["code"]
 lang_name = lang_info["name"]
 lang_full = lang_info["full"]
 
-# 분석 레벨 선택
+# Analysis level selection
 analysis_level = st.selectbox(
     "Kies je Nederlandse niveau:",
     options=["A1 (Beginner)", "A2 (Elementair)", "B1 (Intermediate)", "B2 (Gevorderd)"],
@@ -77,7 +77,7 @@ analysis_level = st.selectbox(
 )
 
 
-# 요약 실행 버튼
+# Summary execution button
 if st.button("🚀 Tekst Samenvatten", type="primary", disabled=not (api_key and keyword)):
     if not api_key:
         st.warning("⚠️ Voer eerst je API sleutel in!")
@@ -86,7 +86,7 @@ if st.button("🚀 Tekst Samenvatten", type="primary", disabled=not (api_key and
     else:
         with st.spinner("Gemini AI analyseert de tekst..."):
             try:
-                # 프롬프트 생성 (선택된 언어에 따라)
+                # Generate prompt (based on selected language)
                 if lang_code == "kr":
                     target_explanation = "한국어"
                     prompt = f"""다음 조건에 맞춰 네덜란드어 텍스트를 요약하고 분석하시오: "{keyword}"
@@ -132,11 +132,11 @@ JSON structure:
 - expressions: [{{"expression": "useful expression", "explanation": {{"nl": "Dutch explanation", "en": "English explanation"}}, "examples": [{{"nl": "Dutch example", "en": "English example"}}] (3 items) }}] (more than 5 items)
 - keywords: [{{"keyword": {{"nl": "Dutch keyword", "en": "English keyword"}}, "examples": [{{"nl": "Dutch example", "kr": "English example"}}] (3 items) }}] (more than 10 items)"""
                 
-                # API 호출
+                # API call
                 response = model.generate_content(prompt)
                 result_text = response.text
                 
-                # JSON 파싱
+                # JSON parsing
                 try:
                     if "```json" in result_text:
                         json_start = result_text.find("```json") + 7
@@ -151,10 +151,10 @@ JSON structure:
                     
                     result_json = json.loads(json_text)
                     
-                    # 결과 표시
+                    # Display results
                     st.success("✅ Samenvatting voltooid!")
                     
-                    # 요약 섹션
+                    # Summary section
                     st.header("📋 Samenvatting")
                     col1, col2 = st.columns(2)
                     
@@ -168,7 +168,7 @@ JSON structure:
                         summary_target = result_json.get("summary", {}).get(lang_code, "Geen vertaling gevonden.")
                         st.write(summary_target)
                     
-                    # 유용한 표현 섹션
+                    # Useful expressions section
                     st.header("💬 Nuttige Uitdrukkingen")
                     expressions = result_json.get("expressions", [])
                     
@@ -186,7 +186,7 @@ JSON structure:
                                     example_target = example.get(lang_code, 'N/A')
                                     st.write(f"- {example_nl} ({example_target})")
                     
-                    # 키워드 섹션
+                    # Keywords section
                     st.header("🏷️ Belangrijke Woorden")
                     keywords = result_json.get("keywords", [])
                     
@@ -202,7 +202,7 @@ JSON structure:
                                     example_target = example.get(lang_code, 'N/A')
                                     st.write(f"- {example_nl} ({example_target})")
                     
-                    # 원본 JSON 표시
+                    # Display original JSON
                     # with st.expander("🔧 Originele JSON Data for developer"):
                     #     st.json(result_json)
                 
@@ -213,7 +213,7 @@ JSON structure:
             except Exception as e:
                 st.error(f"❌ Er is een fout opgetreden: {str(e)}")
 
-# 푸터
+# Markdown
 st.markdown("---")
 st.markdown("*Gemaakt met ❤️ door Streamlit en Google Gemini AI voor Nederlandse taalstudenten*")
 st.markdown("*Als je contact wilt opnemen met de maker, kun je een e-mail sturen naar ahkyeong.choe@gmail.com.*")
